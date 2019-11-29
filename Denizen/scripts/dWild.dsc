@@ -49,7 +49,7 @@ dWild:
     on server start:
       - inject dWild_init
 
-      - if <yaml.list.contains_all[dWild_config]>:
+      - if <yaml.list.contains[dWild_config]>:
         - narrate "<red>One or more config files failed to load. Please check your console log."
         - stop
       - else:
@@ -63,12 +63,12 @@ dWild_cmd:
   permission: dwild.use
   script:
 
-    - if <player.has_flag[RTPRecent]>:
-      - narrate "<&c>You must wait <player.flag[RTPRecent].expiration.formatted> before you can use this command again."
+    - if <player.has_flag[dWildRecent]>:
+      - narrate "<&c>You must wait <player.flag[dWildRecent].expiration.formatted> before you can use this command again."
       - stop
     - if <context.args.get[1]||null> == null:
       - define target <player>
-    - else if <player.has_permission[rtp.other]>:
+    - else if <player.has_permission[dWild.other]>:
       - define target <server.match_player[<context.args.get[1]>]>
     - else:
       - narrate "<&c>You lack the permissions to teleport another player."
@@ -77,8 +77,8 @@ dWild_cmd:
     - define zLoc <util.random.int[<element[-<[size]>].+[<[centerz]>]>].to[<element[<[size]>].+[<[centerz]>]>]>
     - teleport <[target]> l@<def[xLoc]>,300,<def[zLoc]>,<[world]>
     - flag <[target]> freeFalling:true
-    - flag <[target]> RTPRecent:true duration:<yaml[dWild_config].read[cooldown]>s
-    - flag <[target]> freeFalling:true duration:<yaml[dWild_config].read[cooldown]>s
+    - flag <[target]> dWildRecent:true duration:<yaml[dWild_config].read[command-cooldown]>s
+    - flag <[target]> freeFalling:true duration:<yaml[dWild_config].read[immunity-time]>s
 
 
 system_wilderness_teleport_events:

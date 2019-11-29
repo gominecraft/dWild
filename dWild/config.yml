@@ -1,0 +1,19 @@
+# Teleport on the ground (safe) or give them time to consider their life choices (wild).
+# safe = Teleport to a position on the ground
+# wild = Teleport them to location but at Y:255
+teleport-type: wild
+
+# min blocks from spawn to.. spawn the player
+min-spawn-distance: 200
+
+# Max distance from spawn or look @ worldborder
+# Options specified as:
+# max-spawn-distance: 5000
+# max-spawn-distance: worldborder -- only if you have a MINECRAFT worldborder set, not a plugin border.
+max-distance: 1000
+
+# In seconds
+command-cooldown: 300
+
+# Seconds the player is immune from damage post-teleport.
+immunity-seconds: 60
