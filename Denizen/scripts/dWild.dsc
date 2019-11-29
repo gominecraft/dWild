@@ -26,3 +26,69 @@
 
 # ---- Don't edit below here unless you know what you're doing.
 # ---- I definitely don't know what I'm doing.
+
+dWild_version:
+  type: yaml data
+  version: 0.0.1
+
+dWild_init:
+  type: task
+  debug: false
+  script:
+  - if <server.has_file[../dWild/config.yml]>:
+    - ~yaml load:../dWild/config.yml id:dWild_config
+    - announce to_console "[dWild] Loaded config.yml"
+
+dWild:
+  type: world
+  debug: false
+  events:
+    on reload scripts:
+      - inject dWild_init
+
+    on server start:
+      - inject dWild_init
+
+      - if <yaml.list.contains_all[dWild_config]>:
+        - narrate "<red>One or more config files failed to load. Please check your console log."
+        - stop
+      - else:
+        - narrate "<green>Loaded dWild config successfully.""
+
+dWild_cmd:
+  type: command
+  debug: false
+  name: dwild
+  aliases: wild
+  permission: dwild.use
+  script:
+
+    - if <player.has_flag[RTPRecent]>:
+      - narrate "<&c>You must wait <player.flag[RTPRecent].expiration.formatted> before you can use this command again."
+      - stop
+    - if <context.args.get[1]||null> == null:
+      - define target <player>
+    - else if <player.has_permission[rtp.other]>:
+      - define target <server.match_player[<context.args.get[1]>]>
+    - else:
+      - narrate "<&c>You lack the permissions to teleport another player."
+      - stop
+    - define xLoc <util.random.int[<element[-<[size]>].+[<[centerx]>]>].to[<element[<[size]>].+[<[centerx]>]>]>
+    - define zLoc <util.random.int[<element[-<[size]>].+[<[centerz]>]>].to[<element[<[size]>].+[<[centerz]>]>]>
+    - teleport <[target]> l@<def[xLoc]>,300,<def[zLoc]>,<[world]>
+    - flag <[target]> freeFalling:true
+    - flag <[target]> RTPRecent:true duration:<yaml[dWild_config].read[cooldown]>s
+    - flag <[target]> freeFalling:true duration:<yaml[dWild_config].read[cooldown]>s
+
+
+system_wilderness_teleport_events:
+  type: world
+  debug: false
+  events:
+    on player damaged by FALL bukkit_priority:LOWEST:
+      - if <player.has_flag[freeFalling]>:
+        - determine cancelled
+
+    on entity starts gliding:
+      - if <player.has_flag[freeFalling]>:
+        - flag <player> freeFalling:!
