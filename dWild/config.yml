@@ -8,10 +8,12 @@ use-worldborder: true
 # min blocks from spawn to.. spawn the player
 min-teleport-distance: 500
 
-# Max distance from spawn or look @ worldborder
-# Options specified as:
-# max-spawn-distance: 5000
+# Max distance from spawn
+# Thisw is ignored if use-worldborder is true.
 max-teleport-distance: 2500
+
+# Use particle effects on-teleport.
+use-effects: true
 
 # In seconds
 command-cooldown: 10

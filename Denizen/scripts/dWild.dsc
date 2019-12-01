@@ -10,29 +10,33 @@
 # +----------------------
 #
 # @author GoMinecraft ( Discord: GoMinecraft#1421 )
-# @date 2019/11/28
+# @date 2019/12/01
 # @denizen-build REL-1696
-# @script-version 0.0.1
+# @script-version 0.5.0
 #
 # Usage - Alias: /wild:
-# /dwild
-# /dwild (version) - Shows the version
+# /dwild [player]
+# /dwild version - Shows the version
 # /dwild reload - Reloads the config.yml
 #
 # Permissions:
 # dwild.wild - Lets a player use /wild
-# dwild.wild.other
-#
+# dwild.wild.other # Lets a player use /wild on other players
 # dwild.version - Shows the dwild version number
-# dwild.reload - Reloads the dwild config
+#
+# Recommended usage:
+#  * Setup zone-based permissions and only allow /wild to be
+# used in spawn or set a high command-cooldown
+
 
 # ---- Don't edit below here unless you know what you're doing.
 # ---- I definitely don't know what I'm doing.
 
 dWild_version:
   type: yaml data
-  version: 0.0.1
+  version: 0.5.0
 
+  # Init process
 dWild_init:
   type: task
   debug: true
@@ -48,16 +52,6 @@ dWild_init:
     - announce to_console "<red>One or more config files failed to load. Please check your console log."
     - flag srver dWildLoaded:false
 
-dWild:
-  type: world
-  debug: false
-  events:
-    on reload scripts:
-      - inject dWild_init
-
-    on server start:
-      - inject dWild_init
-
 dWild_cmd:
   type: command
   debug: false
@@ -67,14 +61,22 @@ dWild_cmd:
   permission: dwild.wild
   script:
 
+  # Sling an error if the config didn't load.
   - if <server.flag[dWildLoaded]> == false:
     - narrate "An error has occured in dWild."
     - stop
 
-  - if <player.has_flag[dWildRecent]> && <player.is_op> != true:
-    - narrate "<&c>You must wait <player.flag[dWildRecent].expiration.formatted> before you can use this command again."
+  # If you have the permission.. version!
+  - if <context.args.get[1]> == version && ( <player.has_permission[dwild.version]||false> || <context.server||false> ):
+    - narrate "<red>dWild <green>v<script[dWild_version].yaml_key[version]>"
     - stop
 
+  # Let ops bypass the command-cooldown
+  - if <player.has_flag[dWildRecent]> && <player.is_op> != true:
+    - narrate "<red>You must wait <player.flag[dWildRecent].expiration.formatted> before you can use this command again."
+    - stop
+
+  # Run dwild or dwild [player]
   - if <context.args.get[1]||null> == null:
     - define target:<player>
   - else:
@@ -84,32 +86,32 @@ dWild_cmd:
       - narrate "You do not have permission to use wild on other players."
       - stop
 
-  - define minDistFromSpawn:<yaml[dWild_config].read[min-teleport-distance]>
-  - define maxDistFromSpawn:<yaml[dWild_config].read[max-teleport-distance]>
+  - if <player.has_permission[dWild.wild]>:
 
-  - if <yaml[dWild_config].read[use-worldborder]> == true:
-    - narrate "use-worldborder is true"
-    - define border:<player.location.world.border_size.div[2]>
-    - if <[border]> > 10000:
-      - narrate "Border > 10000"
-      - define safeSpawnDistPositive:<[border].sub[1000]>
-      - define safeSpawnDistNegative:<[safeSpawnDistPositive].mul[-1]>
+    - define minDistFromSpawn:<yaml[dWild_config].read[min-teleport-distance]>
+    - define maxDistFromSpawn:<yaml[dWild_config].read[max-teleport-distance]>
+
+    - if <yaml[dWild_config].read[use-worldborder]>:
+      - define border:<player.location.world.border_size.div[2]>
+      - if <[border]> > 10000:
+        - define safeSpawnDistPositive:<[border].sub[1000]>
+        - define safeSpawnDistNegative:<[safeSpawnDistPositive].mul[-1]>
+      - else:
+        - define safeSpawnDistPositive:<player.location.world.border_size.sub[<player.location.world.border_size.mul[0.10]>]>
+        - define safeSpawnDistNegative:<[safeSpawnDistPositive].mul[-1]>
     - else:
-      - narrate "Border < 10000"
-      - define safeSpawnDistPositive:<player.location.world.border_size.sub[<player.location.world.border_size.mul[0.10]>]>
-      - define safeSpawnDistNegative:<[safeSpawnDistPositive].mul[-1]>
+      - define safeSpawnDistPositive:<[maxDistFromSpawn].sub[<[maxDistFromSpawn].as_element.mul[0.10]>]>
+      - define safeSpawnDistNegative:<[safeSpawnDistPositive].to_element.mul[-1]>
   - else:
-    - narrate "use-worldborder is false"
-    - define safeSpawnDistPositive:<[maxDistFromSpawn].sub[<[maxDistFromSpawn].as_element.mul[0.10]>]>
-    - define safeSpawnDistNegative:<[safeSpawnDistPositive].to_element.mul[-1]>
+    - narrate "<red>You do not have permission to run that command."
+    - stop
 
   - define randZCoords:<util.random.int[<[safeSpawnDistNegative]>].to[<[safeSpawnDistPositive]>]>
   - define randXCoords:<util.random.int[<[safeSpawnDistNegative]>].to[<[safeSpawnDistPositive]>]>
 
-  - narrate "RandZ: <[randZCoords]>, RandX: <[randXCoords]>"
-
-  - if <player.has_permission[dWild.wild]>:
-    - narrate "Target: <[target].name>"
+  
+    - if <yaml[dWildConfig].read[use-effects]>:
+      - playeffect sneeze <player.location.above.forward> quantity:500 offset:0.6
     - teleport <[target]> l@<[randXCoords]>,255,<[randZCoords]>,<[target].location.world>
     - flag <[target]> freeFalling:true duration:<yaml[dWild_config].read[immunity-seconds]>
     - flag <[target]> dWildRecent:true duration:<yaml[dWild_config].read[command-cooldown]>
@@ -119,6 +121,11 @@ dWild_events:
   type: world
   debug: false
   events:
+    on reload scripts:
+      - inject dWild_init
+    on server start:
+      - inject dWild_init
+
     on player damaged by FALL bukkit_priority:LOWEST:
       - if <player.has_flag[freeFalling]>:
         - flag <player> freeFalling:!
