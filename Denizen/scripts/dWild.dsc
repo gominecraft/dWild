@@ -61,53 +61,46 @@ dWild_cmd:
   type: command
   debug: false
   name: dwild
-  aliases: wild
-  permission: dwild.use
+  aliases:
+  - wild
+  permission: dwild.wild
   script:
-    - if <player.has_permission[dWild.wild]]>
+  - if <player.has_flag[dWildRecent]>:
+    - narrate "<&c>You must wait <player.flag[dWildRecent].expiration.formatted> before you can use this command again."
+    - stop
 
-      - define minDistFromSpawn:<yaml[dWild_config].read[min-distance-from-spawn]>
-      - define maxDistFromSpawn:<yaml[dWild_config].read[max-distance-from-distance]>
+  - if <context.args.get[1]||null> == null:
+    - define target:<player>
+  - else:
+    - if <player.has_permission[dWild.other]>:
+      - define target:<server.match_player[<context.args.get[1]>]>
+    - else:
+      - narrate "You do not have permission to use wild on other players."
+      - stop
 
-      - if <yaml[dWild_config].read[use-worldborder]> == true:
-        - if <player.location.world.border_size> > 10000:
-          - define safeSpawnDistPositive:<player.location.world.border_size.sub[1000]>
-          - define safeSpawnDistNegative:<[safeSpawnDistPositive].to_element.mul[-1]>
-        - else
-          - define safeSpawnDistPositive:<player.location.world.border_size.sub[<player.location.world.border_size.mul[0.10]>]>
-          - define safeSpawnDistNegative:<[safeSpawnDistPositive].to_element.mul[-1]>
+  - define minDistFromSpawn:<yaml[dWild_config].read[min-teleport-distance]>
+  - define maxDistFromSpawn:<yaml[dWild_config].read[max-teleport-distance]>
 
-      - else:
+  - if <yaml[dWild_config].read[use-worldborder]> == true:
+    - define border:<player.location.world.border_size>
+    - if <player.location.world.border_size> > 10000:
+      - define safeSpawnDistPositive:<player.location.world.border_size.sub[1000]>
+      - define safeSpawnDistNegative:<[safeSpawnDistPositive].to_element.mul[-1]>
+    - else
+      - define safeSpawnDistPositive:<player.location.world.border_size.sub[<player.location.world.border_size.mul[0.10]>]>
+      - define safeSpawnDistNegative:<[safeSpawnDistPositive].to_element.mul[-1]>
+  - else:
+    - define safeSpawnDistPositive:<[maxDistFromSpawn].sub[<[maxDistFromSpawn].as_element.mul[0.10]>]>
+    - define safeSpawnDistNegative:<[safeSpawnDistPositive].to_element.mul[-1]>
 
-        - define safeSpawnDistPositive:<[maxDistFromSpawn].sub[<[maxDistFromSpawn].as_element.mul[0.10]>]>
-        - define safeSpawnDistNegative:<[safeSpawnDistPositive].to_element.mul[-1]>
+  - define randZCoords:<util.random.int[<[safeSpawnDistNegative]>].to[<[safeSpawnDistPositive]>]>
+  - define randXCoords:<util.random.int[<[safeSpawnDistNegative]>].to[<[safeSpawnDistPositive]>]>
 
-      - define randZCoords:<util.random.int[<[safeSpawnDistNegative]>].to[<[safeSpawnDistPositive]>]>
-      - define randXCoords:<util.random.int[<[safeSpawnDistNegative]>].to[<[safeSpawnDistPositive]>]>
+  - if <player.has_permission[dWild.wild]]>
+    - teleport <player> l@[<[randXCoords]>,255,<[randZCoords]>]
+    - flag <[target]> freeFalling:true duration:<yaml[dWild_config].read[immunity-seconds]>
+    - flag <[target]> dWildRecent:true duration:<yaml[dWild_config].read[command-cooldown]>
 
-    - if <player.location.world.spawn_location.z> > <[minDistFromSpawn]> && <player.location.world.spawn_location.x> > <[minDistFromSpawn]>
-
-      - choose <yaml[dWild_config].read[teleport-type]>:
-        - case safe:
-          - 
-          - 
-        - case wild:
-        - default:
-
-
-# --- Ignore below here, for now.
-
-
-      - if <player.has_flag[dWildRecent]>:
-        - narrate "<&c>You must wait <player.flag[dWildRecent].expiration.formatted> before you can use this command again."
-        - stop
-      - if <context.args.get[1]||null> == null:
-        - define target:<player>
-      - else if <player.has_permission[dWild.other]>:
-        - define target <server.match_player[<context.args.get[1]>]>
-      - else:
-        - narrate "<&c>You lack the permissions to teleport another player."
-        - stop
 
 system_wilderness_teleport_events:
   type: world
