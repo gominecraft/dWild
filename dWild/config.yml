@@ -14,7 +14,7 @@ min-teleport-distance: 500
 max-teleport-distance: 2500
 
 # In seconds
-command-cooldown: 300
+command-cooldown: 10
 
 # Seconds the player is immune from damage post-teleport.
 immunity-seconds: 60

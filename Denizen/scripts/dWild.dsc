@@ -71,7 +71,7 @@ dWild_cmd:
     - narrate "An error has occured in dWild."
     - stop
 
-  - if <player.has_flag[dWildRecent]>:
+  - if <player.has_flag[dWildRecent]> && <player.is_op> != true:
     - narrate "<&c>You must wait <player.flag[dWildRecent].expiration.formatted> before you can use this command again."
     - stop
 
@@ -89,15 +89,15 @@ dWild_cmd:
 
   - if <yaml[dWild_config].read[use-worldborder]> == true:
     - narrate "use-worldborder is true"
-    - define border:<player.location.world.border_size>
-    - if <player.location.world.border_size> > 10000:
+    - define border:<player.location.world.border_size.div[2]>
+    - if <[border]> > 10000:
       - narrate "Border > 10000"
-      - define safeSpawnDistPositive:<player.location.world.border_size.sub[1000]>
-      - define safeSpawnDistNegative:<[safeSpawnDistPositive].to_element.mul[-1]>
+      - define safeSpawnDistPositive:<[border].sub[1000]>
+      - define safeSpawnDistNegative:<[safeSpawnDistPositive].mul[-1]>
     - else:
       - narrate "Border < 10000"
       - define safeSpawnDistPositive:<player.location.world.border_size.sub[<player.location.world.border_size.mul[0.10]>]>
-      - define safeSpawnDistNegative:<[safeSpawnDistPositive].to_element.mul[-1]>
+      - define safeSpawnDistNegative:<[safeSpawnDistPositive].mul[-1]>
   - else:
     - narrate "use-worldborder is false"
     - define safeSpawnDistPositive:<[maxDistFromSpawn].sub[<[maxDistFromSpawn].as_element.mul[0.10]>]>
@@ -106,8 +106,11 @@ dWild_cmd:
   - define randZCoords:<util.random.int[<[safeSpawnDistNegative]>].to[<[safeSpawnDistPositive]>]>
   - define randXCoords:<util.random.int[<[safeSpawnDistNegative]>].to[<[safeSpawnDistPositive]>]>
 
-  - if <player.has_permission[dWild.wild]>
-    - teleport <player> l@[<[randXCoords]>,255,<[randZCoords]>]
+  - narrate "RandZ: <[randZCoords]>, RandX: <[randXCoords]>"
+
+  - if <player.has_permission[dWild.wild]>:
+    - narrate "Target: <[target].name>"
+    - teleport <[target]> l@<[randXCoords]>,255,<[randZCoords]>,<[target].location.world>
     - flag <[target]> freeFalling:true duration:<yaml[dWild_config].read[immunity-seconds]>
     - flag <[target]> dWildRecent:true duration:<yaml[dWild_config].read[command-cooldown]>
 
