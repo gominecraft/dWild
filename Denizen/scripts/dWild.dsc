@@ -35,11 +35,18 @@ dWild_version:
 
 dWild_init:
   type: task
-  debug: false
+  debug: true
   script:
   - if <server.has_file[../dWild/config.yml]>:
     - ~yaml load:../dWild/config.yml id:dWild_config
     - announce to_console "[dWild] Loaded config.yml"
+
+  - if <yaml.list.contains[dWild_config]>:
+    - announce to_console "<green>Loaded dWild config successfully."
+    - flag server dWildLoaded:true
+  - else:
+    - announce to_console "<red>One or more config files failed to load. Please check your console log."
+    - flag srver dWildLoaded:false
 
 dWild:
   type: world
@@ -51,12 +58,6 @@ dWild:
     on server start:
       - inject dWild_init
 
-      - if <yaml.list.contains[dWild_config]>:
-        - narrate "<green>Loaded dWild config successfully."
-      - else:
-        - narrate "<red>One or more config files failed to load. Please check your console log."
-        - stop
-
 dWild_cmd:
   type: command
   debug: false
@@ -65,6 +66,11 @@ dWild_cmd:
   - wild
   permission: dwild.wild
   script:
+
+  - if <server.flag[dWildLoaded]> == false:
+    - narrate "An error has occured in dWild."
+    - stop
+
   - if <player.has_flag[dWildRecent]>:
     - narrate "<&c>You must wait <player.flag[dWildRecent].expiration.formatted> before you can use this command again."
     - stop
@@ -82,27 +88,31 @@ dWild_cmd:
   - define maxDistFromSpawn:<yaml[dWild_config].read[max-teleport-distance]>
 
   - if <yaml[dWild_config].read[use-worldborder]> == true:
+    - narrate "use-worldborder is true"
     - define border:<player.location.world.border_size>
     - if <player.location.world.border_size> > 10000:
+      - narrate "Border > 10000"
       - define safeSpawnDistPositive:<player.location.world.border_size.sub[1000]>
       - define safeSpawnDistNegative:<[safeSpawnDistPositive].to_element.mul[-1]>
-    - else
+    - else:
+      - narrate "Border < 10000"
       - define safeSpawnDistPositive:<player.location.world.border_size.sub[<player.location.world.border_size.mul[0.10]>]>
       - define safeSpawnDistNegative:<[safeSpawnDistPositive].to_element.mul[-1]>
   - else:
+    - narrate "use-worldborder is false"
     - define safeSpawnDistPositive:<[maxDistFromSpawn].sub[<[maxDistFromSpawn].as_element.mul[0.10]>]>
     - define safeSpawnDistNegative:<[safeSpawnDistPositive].to_element.mul[-1]>
 
   - define randZCoords:<util.random.int[<[safeSpawnDistNegative]>].to[<[safeSpawnDistPositive]>]>
   - define randXCoords:<util.random.int[<[safeSpawnDistNegative]>].to[<[safeSpawnDistPositive]>]>
 
-  - if <player.has_permission[dWild.wild]]>
+  - if <player.has_permission[dWild.wild]>
     - teleport <player> l@[<[randXCoords]>,255,<[randZCoords]>]
     - flag <[target]> freeFalling:true duration:<yaml[dWild_config].read[immunity-seconds]>
     - flag <[target]> dWildRecent:true duration:<yaml[dWild_config].read[command-cooldown]>
 
 
-system_wilderness_teleport_events:
+dWild_events:
   type: world
   debug: false
   events:

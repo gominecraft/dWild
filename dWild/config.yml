@@ -3,7 +3,7 @@
 # Keep in mind, the minecraft default world border is 29,999,999.
 #
 # If this is set to false, the max-teleport-distance is used as the border ( minus 10% )
-use-worldborder: false
+use-worldborder: true
 
 # min blocks from spawn to.. spawn the player
 min-teleport-distance: 500
