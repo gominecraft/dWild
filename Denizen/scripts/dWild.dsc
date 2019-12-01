@@ -39,7 +39,7 @@ dWild_version:
   # Init process
 dWild_init:
   type: task
-  debug: true
+  debug: false
   script:
   - if <server.has_file[../dWild/config.yml]>:
     - ~yaml load:../dWild/config.yml id:dWild_config
@@ -50,7 +50,7 @@ dWild_init:
     - flag server dWildLoaded:true
   - else:
     - announce to_console "<red>One or more config files failed to load. Please check your console log."
-    - flag srver dWildLoaded:false
+    - flag server dWildLoaded:false
 
 dWild_cmd:
   type: command
@@ -62,17 +62,17 @@ dWild_cmd:
   script:
 
   # Sling an error if the config didn't load.
-  - if <server.flag[dWildLoaded]> == false:
+  - if !<server.flag[dWildLoaded]>:
     - narrate "An error has occured in dWild."
     - stop
 
   # If you have the permission.. version!
-  - if <context.args.get[1]> == version && ( <player.has_permission[dwild.version]||false> || <context.server||false> ):
+  - if <context.args.get[1]> == version && ( <player.has_permission[dwild.version]||false> || <context.server> ):
     - narrate "<red>dWild <green>v<script[dWild_version].yaml_key[version]>"
     - stop
 
   # Let ops bypass the command-cooldown
-  - if <player.has_flag[dWildRecent]> && <player.is_op> != true:
+  - if <player.has_flag[dWildRecent]> && !<player.is_op>:
     - narrate "<red>You must wait <player.flag[dWildRecent].expiration.formatted> before you can use this command again."
     - stop
 
@@ -80,7 +80,7 @@ dWild_cmd:
   - if <context.args.get[1]||null> == null:
     - define target:<player>
   - else:
-    - if <player.has_permission[dWild.other]>:
+    - if <player.has_permission[dWild.other]> && <server.match_player[<context.args.get[1]>]:
       - define target:<server.match_player[<context.args.get[1]>]>
     - else:
       - narrate "You do not have permission to use wild on other players."
