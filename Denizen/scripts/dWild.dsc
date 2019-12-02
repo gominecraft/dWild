@@ -3,11 +3,8 @@
 # | dWild
 # |
 # | Allows players to be teleported to a random
-# | location, a minimum (and maximum) distance 
-# | from the world spawn.
-# |
-# | This uses MC world spawn, not
-# | essentials/other plugins
+# | location, a maximum distance from the
+# | world spawn.
 # |
 # +----------------------
 #
