@@ -41,7 +41,7 @@ dWild_version:
   # Init process
 dWild_init:
   type: task
-  debug: false
+  debug: true
   script:
   - if <server.has_file[../dWild/config.yml]>:
     - ~yaml load:../dWild/config.yml id:dWild_config
@@ -56,7 +56,7 @@ dWild_init:
 
 dWild_cmd:
   type: command
-  debug: false
+  debug: true
   name: dwild
   aliases:
   - wild
@@ -97,7 +97,6 @@ dWild_cmd:
 
   - if <player.has_permission[dwild.wild]>:
 
-    - define minDistFromSpawn:<yaml[dWild_config].read[min-teleport-distance]>
     - define maxDistFromSpawn:<yaml[dWild_config].read[max-teleport-distance]>
 
     - if <yaml[dWild_config].read[use-worldborder]>:
@@ -127,7 +126,7 @@ dWild_cmd:
 
 dWild_events:
   type: world
-  debug: false
+  debug: true
   events:
     on reload scripts:
       - inject dWild_init
