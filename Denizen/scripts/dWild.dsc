@@ -112,7 +112,7 @@ dWild_cmd:
   - define randXCoords:<util.random.int[<[safeTeleportDistNegative]>].to[<[safeTeleportDistPositive]>]>
 
   
-    - if <yaml[dWildConfig].read[use-effects]>:
+    - if <yaml[dWild_config].read[use-effects]>:
       - playeffect sneeze <player.location.above.forward> quantity:500 offset:0.6
     - teleport <[target]> l@<[randXCoords]>,255,<[randZCoords]>,<[target].location.world>
     - flag <[target]> freeFalling:true duration:<yaml[dWild_config].read[immunity-seconds]>
