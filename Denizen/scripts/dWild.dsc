@@ -102,7 +102,7 @@ dWild_cmd:
         - define safeTeleportDistPositive:<[border].sub[1000]>
         - define safeTeleportDistNegative:<[safeTeleportDistPositive].mul[-1]>
       - else:
-        - define safeTeleportDistPositive:<player.location.world.border_size.sub[<player.location.world.border_size.mul[0.10]>]>
+        - define safeTeleportDistPositive:<[border].sub[<[border].mul[0.10]>]>
         - define safeTeleportDistNegative:<[safeTeleportDistPositive].mul[-1]>
     - else:
       - define safeTeleportDistPositive:<[maxDistFromSpawn].sub[<[maxDistFromSpawn].as_element.mul[0.10]>]>
@@ -114,11 +114,11 @@ dWild_cmd:
   - define randZCoords:<util.random.int[<[safeTeleportDistNegative]>].to[<[safeTeleportDistPositive]>]>
   - define randXCoords:<util.random.int[<[safeTeleportDistNegative]>].to[<[safeTeleportDistPositive]>]>
 
-    - if <yaml[dWild_config].read[use-effects]>:
-      - playeffect sneeze <player.location.above.forward> quantity:500 offset:0.6
-    - teleport <[target]> l@<[randXCoords]>,255,<[randZCoords]>,<[target].location.world>
-    - flag <[target]> freeFalling:true duration:<yaml[dWild_config].read[immunity-seconds]>
-    - flag <[target]> dWildRecent:true duration:<yaml[dWild_config].read[command-cooldown]>
+  - if <yaml[dWild_config].read[use-effects]>:
+    - playeffect sneeze <player.location.above.forward> quantity:500 offset:0.6
+  - teleport <[target]> l@<[randXCoords]>,255,<[randZCoords]>,<[target].location.world>
+  - flag <[target]> freeFalling:true duration:<yaml[dWild_config].read[immunity-seconds]>
+  - flag <[target]> dWildRecent:true duration:<yaml[dWild_config].read[command-cooldown]>
 
 
 dWild_events:
