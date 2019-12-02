@@ -1,4 +1,3 @@
-
 # +--------------------
 # |
 # | dWild
@@ -97,20 +96,20 @@ dWild_cmd:
     - if <yaml[dWild_config].read[use-worldborder]>:
       - define border:<player.location.world.border_size.div[2]>
       - if <[border]> > 10000:
-        - define safeSpawnDistPositive:<[border].sub[1000]>
-        - define safeSpawnDistNegative:<[safeSpawnDistPositive].mul[-1]>
+        - define safeTeleportDistPositive:<[border].sub[1000]>
+        - define safeTeleportDistNegative:<[safeTeleportDistPositive].mul[-1]>
       - else:
-        - define safeSpawnDistPositive:<player.location.world.border_size.sub[<player.location.world.border_size.mul[0.10]>]>
-        - define safeSpawnDistNegative:<[safeSpawnDistPositive].mul[-1]>
+        - define safeTeleportDistPositive:<player.location.world.border_size.sub[<player.location.world.border_size.mul[0.10]>]>
+        - define safeTeleportDistNegative:<[safeTeleportDistPositive].mul[-1]>
     - else:
-      - define safeSpawnDistPositive:<[maxDistFromSpawn].sub[<[maxDistFromSpawn].as_element.mul[0.10]>]>
-      - define safeSpawnDistNegative:<[safeSpawnDistPositive].to_element.mul[-1]>
+      - define safeTeleportDistPositive:<[maxDistFromSpawn].sub[<[maxDistFromSpawn].as_element.mul[0.10]>]>
+      - define safeTeleportDistNegative:<[safeTeleportDistPositive].to_element.mul[-1]>
   - else:
     - narrate "<red>You do not have permission to run that command."
     - stop
 
-  - define randZCoords:<util.random.int[<[safeSpawnDistNegative]>].to[<[safeSpawnDistPositive]>]>
-  - define randXCoords:<util.random.int[<[safeSpawnDistNegative]>].to[<[safeSpawnDistPositive]>]>
+  - define randZCoords:<util.random.int[<[safeTeleportDistNegative]>].to[<[safeTeleportDistPositive]>]>
+  - define randXCoords:<util.random.int[<[safeTeleportDistNegative]>].to[<[safeTeleportDistPositive]>]>
 
   
     - if <yaml[dWildConfig].read[use-effects]>:
