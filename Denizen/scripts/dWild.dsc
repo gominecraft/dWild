@@ -69,10 +69,10 @@ dWild_cmd:
     - stop
 
   # If you have the permission.. version!
-  - if <context.args.get[1]> == version && ( <player.has_permission[dwild.version]||false> || <context.server> ):
+  - if <context.args.get[1]||null> == version && ( <player.has_permission[dwild.version]> || <context.server> ):
     - narrate "<red>dWild <green>v<script[dWild_version].yaml_key[version]>"
     - stop
-  - if <context.args[1]> == reload && ( <player.has_permission[dwild.reload]||false> || <context.server> )
+  - if <context.args.get[1]> == reload && ( <player.has_permission[dwild.reload]> || <context.server> )
     - inject dWild_init
     - narrate "<green>RandomDeathMessages has been reloaded."
     - stop
