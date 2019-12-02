@@ -70,7 +70,7 @@ dWild_cmd:
     - stop
 
   # If you have the permission.. version!
-  - if <context.args.get[1]> == version && ( <player.has_permission[dWild.version]||false> || <context.server> ):
+  - if <context.args.get[1]> == version && ( <player.has_permission[dwild.version]||false> || <context.server> ):
     - narrate "<red>dWild <green>v<script[dWild_version].yaml_key[version]>"
     - stop
 
@@ -83,13 +83,13 @@ dWild_cmd:
   - if <context.args.get[1]||null> == null:
     - define target:<player>
   - else:
-    - if <player.has_permission[dWild.other]> && <server.match_player[<context.args.get[1]>]:
+    - if <player.has_permission[dwild.other]> && <server.match_player[<context.args.get[1]>]:
       - define target:<server.match_player[<context.args.get[1]>]>
     - else:
       - narrate "You do not have permission to use wild on other players."
       - stop
 
-  - if <player.has_permission[dWild.wild]>:
+  - if <player.has_permission[dwild.wild]>:
 
     - define minDistFromSpawn:<yaml[dWild_config].read[min-teleport-distance]>
     - define maxDistFromSpawn:<yaml[dWild_config].read[max-teleport-distance]>
