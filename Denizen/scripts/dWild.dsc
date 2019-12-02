@@ -41,7 +41,7 @@ dWild_version:
   # Init process
 dWild_init:
   type: task
-  debug: true
+  debug: false
   script:
   - if <server.has_file[../dWild/config.yml]>:
     - ~yaml load:../dWild/config.yml id:dWild_config
@@ -56,7 +56,7 @@ dWild_init:
 
 dWild_cmd:
   type: command
-  debug: true
+  debug: false
   name: dwild
   aliases:
   - wild
@@ -127,7 +127,7 @@ dWild_cmd:
 
 dWild_events:
   type: world
-  debug: true
+  debug: false
   events:
     on reload scripts:
       - inject dWild_init
