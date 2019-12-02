@@ -82,8 +82,11 @@ dWild_cmd:
   - if <context.args.get[1]||null> == null:
     - define target:<player>
   - else:
-    - if <player.has_permission[dwild.other]> && <server.match_player[<context.args.get[1]>]:
-      - define target:<server.match_player[<context.args.get[1]>]>
+    - if <player.has_permission[dwild.other]>:
+      - if <server.match_player[<context.args.get[1]>]>:
+        - define target:<server.match_player[<context.args.get[1]>]>
+      - else:
+        - narrate "<context.args.get[1] not found."
     - else:
       - narrate "You do not have permission to use wild on other players."
       - stop
@@ -111,7 +114,6 @@ dWild_cmd:
   - define randZCoords:<util.random.int[<[safeTeleportDistNegative]>].to[<[safeTeleportDistPositive]>]>
   - define randXCoords:<util.random.int[<[safeTeleportDistNegative]>].to[<[safeTeleportDistPositive]>]>
 
-  
     - if <yaml[dWild_config].read[use-effects]>:
       - playeffect sneeze <player.location.above.forward> quantity:500 offset:0.6
     - teleport <[target]> l@<[randXCoords]>,255,<[randZCoords]>,<[target].location.world>
