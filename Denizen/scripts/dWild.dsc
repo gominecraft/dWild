@@ -14,7 +14,7 @@
 # @author GoMinecraft ( Discord: GoMinecraft#1421 )
 # @date 2019/12/01
 # @denizen-build REL-1696
-# @script-version 0.5.0
+# @script-version 1.0.0
 #
 # Usage - Alias: /wild:
 # /dwild [player]
@@ -36,12 +36,12 @@
 
 dWild_version:
   type: yaml data
-  version: 0.5.0
+  version: 1.0.0
 
   # Init process
 dWild_init:
   type: task
-  debug: false
+  debug: true
   script:
   - if <server.has_file[../dWild/config.yml]>:
     - ~yaml load:../dWild/config.yml id:dWild_config
@@ -56,7 +56,7 @@ dWild_init:
 
 dWild_cmd:
   type: command
-  debug: false
+  debug: true
   name: dwild
   aliases:
   - wild
@@ -87,10 +87,11 @@ dWild_cmd:
     - define target:<player>
   - else:
     - if <player.has_permission[dwild.other]>:
-      - if <server.match_player[<context.args.get[1]>]>:
+      - if <server.match_player[<context.args.get[1]>]> != null:
+        - narrate "Found player ..."
         - define target:<server.match_player[<context.args.get[1]>]>
       - else:
-        - narrate "<context.args.get[1] not found."
+        - narrate "<context.args.get[1]> not found."
     - else:
       - narrate "You do not have permission to use wild on other players."
       - stop
@@ -126,7 +127,7 @@ dWild_cmd:
 
 dWild_events:
   type: world
-  debug: false
+  debug: true
   events:
     on reload scripts:
       - inject dWild_init
