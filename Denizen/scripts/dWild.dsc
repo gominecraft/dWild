@@ -5,7 +5,10 @@
 # |
 # | Allows players to be teleported to a random
 # | location, a minimum (and maximum) distance 
-# | from spawn.
+# | from the world spawn.
+# |
+# | This uses MC world spawn, not
+# | essentials/other plugins
 # |
 # +----------------------
 #
@@ -67,7 +70,7 @@ dWild_cmd:
     - stop
 
   # If you have the permission.. version!
-  - if <context.args.get[1]> == version && ( <player.has_permission[dwild.version]||false> || <context.server> ):
+  - if <context.args.get[1]> == version && ( <player.has_permission[dWild.version]||false> || <context.server> ):
     - narrate "<red>dWild <green>v<script[dWild_version].yaml_key[version]>"
     - stop
 
