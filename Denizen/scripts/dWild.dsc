@@ -42,13 +42,13 @@ dWild_init:
   script:
   - if <server.has_file[../dWild/config.yml]>:
     - ~yaml load:../dWild/config.yml id:dWild_config
-    - announce to_console "[dWild] Loaded config.yml"
+    - announce to_console "[dWild] Loadeding config.yml"
 
   - if <yaml.list.contains[dWild_config]>:
-    - announce to_console "<green>Loaded dWild config successfully."
+    - announce to_console "[dWild] Loaded dWild config successfully."
     - flag server dWildLoaded:true
   - else:
-    - announce to_console "<red>One or more config files failed to load. Please check your console log."
+    - announce to_console "[dWild] One or more config files failed to load. Please check your console log."
     - flag server dWildLoaded:false
 
 dWild_cmd:
@@ -71,7 +71,7 @@ dWild_cmd:
     - stop
   - if <context.args.get[1]> == reload && ( <player.has_permission[dwild.reload]> || <context.server> )
     - inject dWild_init
-    - narrate "<green>RandomDeathMessages has been reloaded."
+    - narrate "<green>dWild has been reloaded."
     - stop
 
   # Let ops bypass the command-cooldown
