@@ -11,7 +11,7 @@
 # @author GoMinecraft ( Discord: GoMinecraft#1421 )
 # @date 2019/12/01
 # @denizen-build REL-1696
-# @script-version 1.0.0
+# @script-version 1.0.1
 #
 # Usage - Alias: /wild:
 # /dwild [player]
@@ -33,7 +33,7 @@
 
 dWild_version:
   type: yaml data
-  version: 1.0.0
+  version: 1.0.1
 
   # Init process
 dWild_init:
