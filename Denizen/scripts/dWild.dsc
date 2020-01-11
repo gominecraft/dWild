@@ -52,7 +52,7 @@ dWildInit:
 
 dWildCommand:
   type: command
-  debug: true
+  debug: false
   name: dwild
   aliases:
   - wild
