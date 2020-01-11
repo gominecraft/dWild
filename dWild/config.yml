@@ -9,7 +9,13 @@ use-worldborder: true
 # This is ignored if use-worldborder is true.
 max-teleport-distance: 2500
 
-# Use particle effects on-teleport.
+# Matches against the whole biome string.
+# Adding "ocean" will ensure players cannot land in *OCEAN* biomes.
+# Make it empty to allow any.
+blacklist-biomes:
+- ocean
+
+# Use particle effects on-teleport. Pointless for now.
 # It works, but it's not fleshed out with any variability
 use-effects: false
 
@@ -17,4 +23,4 @@ use-effects: false
 command-cooldown: 30
 
 # Seconds the player is immune from damage post-teleport.
-immunity-seconds: 60
+immunity-seconds: 15
