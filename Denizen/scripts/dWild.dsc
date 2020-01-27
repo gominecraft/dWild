@@ -11,7 +11,7 @@
 # @author GoMinecraft ( Discord: GoMinecraft#1421 )
 # @date 2019/12/03
 # @denizen-build DEV-4511+
-# @script-version 1.1.0
+# @script-version 1.1.1
 #
 # Usage - Alias: /wild, /rtp:
 # /dwild [player]
@@ -94,7 +94,7 @@ dWildCommand:
       - stop
 
   - define maxDistFromSpawn:<yaml[dWildConfig].read[max-teleport-distance]>
-  - define disallowedChunks:<yaml[dWildConfig].read[disallowed-biomes]>
+  - define blacklistBiomes:<yaml[dWildConfig].read[blacklist-biomes]>
 
   - if <yaml[dWildConfig].read[use-worldborder]>:
     - define border:<player.location.world.border_size.div[2]>
@@ -118,7 +118,7 @@ dWildCommand:
     - if <yaml[dWildConfig].read[blacklist-biomes].size> > 0:
       - define loc:<location[<[randXCoords]>,1,<[randZCoords]>,<player.location.world>]>
       - chunkload add <[loc].chunk> duration:1t
-      - if !<[loc].biome.contains_any[<[disallowedChunks]>]>:
+      - if !<[loc].biome.contains_any[<[blacklistBiomes]>]>:
         - define foundChunk:true
     - else:
       - define foundChunk:true

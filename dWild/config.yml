@@ -20,7 +20,7 @@ blacklist-biomes:
 use-effects: false
 
 # Seconds before someone can run /wild again
-command-cooldown: 30
+command-cooldown: 300
 
 # Seconds the player is immune from damage post-teleport.
 immunity-seconds: 15
