@@ -11,7 +11,7 @@
 # @author GoMinecraft ( Discord: GoMinecraft#1421 )
 # @date 2019/12/03
 # @denizen-build DEV-4511+
-# @script-version 1.1.1
+# @script-version 1.1.2
 #
 # Usage - Alias: /wild, /rtp:
 # /dwild [player]
@@ -32,7 +32,7 @@
 
 dWildVersion:
   type: yaml data
-  version: 1.1.0
+  version: 1.1.2
 
   # Init process
 dWildInit:
@@ -94,7 +94,7 @@ dWildCommand:
       - stop
 
   - define maxDistFromSpawn:<yaml[dWildConfig].read[max-teleport-distance]>
-  - define blacklistBiomes:<yaml[dWildConfig].read[blacklist-biomes]>
+  - define blacklistBiomes:<yaml[dWildConfig].read[blacklist-biomes]||null>
 
   - if <yaml[dWildConfig].read[use-worldborder]>:
     - define border:<player.location.world.border_size.div[2]>
