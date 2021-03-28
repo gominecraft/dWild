@@ -52,6 +52,7 @@ dWildInit:
 
 dWildCommand:
   type: command
+  description: Teleport a player to a random location within the world border.
   debug: false
   name: dwild
   aliases:
@@ -69,8 +70,8 @@ dWildCommand:
   - if <context.args.get[1]||null> == version && ( <player.has_permission[dwild.version]> || <context.server> ):
     - narrate "<red>dWild <green>v<script[dWildVersion].yaml_key[version]>"
     - stop
-  - if <context.args.get[1]> == reload && ( <player.has_permission[dwild.reload]> || <context.server> )
-    - inject dWild_init
+  - if <context.args.get[1]> == reload && ( <player.has_permission[dwild.reload]> || <context.server> ):
+    - inject dWildInit
     - narrate "<green>dWild has been reloaded."
     - stop
 
