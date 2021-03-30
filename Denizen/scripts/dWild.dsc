@@ -8,10 +8,10 @@
 # |
 # +----------------------
 #
-# @author GoMinecraft ( Discord: GoMinecraft#1421 )
+# @author GoMinecraft ( Discord: BrainFailures#1421 )
 # @date 2019/12/03
 # @denizen-build ALWAYS USE THE LATEST @ https://ci.citizensnpcs.co/job/Denizen/
-# @script-version 1.2.0
+# @script-version 1.2.1
 #
 # Usage - Alias: /wild, /rtp:
 # /dwild [player]
@@ -32,7 +32,7 @@
 
 dWildVersion:
   type: data
-  version: 1.2.0
+  version: 1.2.1
 
   # Init process
 dWildInit:
@@ -71,7 +71,7 @@ dWildCommand:
   - if <context.args.get[1]||null> == version && ( <player.has_permission[dwild.version]> || <context.server> ):
     - narrate "<red>dWild <green>v<script[dWildVersion].data_key[version]>"
     - stop
-  - if <context.args.get[1]> == reload && ( <player.has_permission[dwild.reload]> || <context.server> ):
+  - if <context.args.get[1]||null> == reload && ( <player.has_permission[dwild.reload]> || <context.server> ):
     - inject dWildInit
     - narrate "<green>dWild has been reloaded."
     - stop

@@ -14,6 +14,7 @@ max-teleport-distance: 2500
 # Make it empty to allow any.
 blacklist-biomes:
 - ocean
+- stone_shore
 
 # Use particle effects on-teleport. Pointless for now.
 # It works, but it's not fleshed out with any variability
@@ -22,5 +23,5 @@ use-effects: false
 # Seconds before someone can run /wild again
 command-cooldown: 300
 
-# Seconds the player is immune from damage post-teleport.
+# Seconds the player is immune from fall damage post-teleport.
 immunity-seconds: 15
