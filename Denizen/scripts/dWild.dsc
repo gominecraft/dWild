@@ -11,7 +11,7 @@
 # @author GoMinecraft ( Discord: GoMinecraft#1421 )
 # @date 2019/12/03
 # @denizen-build DEV-4511+
-# @script-version 1.1.2
+# @script-version 1.1.3
 #
 # Usage - Alias: /wild, /rtp:
 # /dwild [player]
@@ -32,7 +32,7 @@
 
 dWildVersion:
   type: yaml data
-  version: 1.1.2
+  version: 1.1.3
 
   # Init process
 dWildInit:
@@ -135,7 +135,7 @@ dWildCommand:
   - flag <[target]> dWildFreeFalling:true duration:<yaml[dWildConfig].read[immunity-seconds]>
   - flag <[target]> dWildRecent:true duration:<yaml[dWildConfig].read[command-cooldown]>
 
-dWild_events:
+dWildEvents:
   type: world
   debug: false
   events:
