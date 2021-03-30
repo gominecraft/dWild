@@ -10,8 +10,8 @@
 #
 # @author GoMinecraft ( Discord: GoMinecraft#1421 )
 # @date 2019/12/03
-# @denizen-build DEV-4511+
-# @script-version 1.1.3
+# @denizen-build ALWAYS USE THE LATEST @ https://ci.citizensnpcs.co/job/Denizen/
+# @script-version 1.2.0
 #
 # Usage - Alias: /wild, /rtp:
 # /dwild [player]
@@ -31,8 +31,8 @@
 # ---- I definitely don't know what I'm doing.
 
 dWildVersion:
-  type: yaml data
-  version: 1.1.3
+  type: data
+  version: 1.2.0
 
   # Init process
 dWildInit:
@@ -55,6 +55,7 @@ dWildCommand:
   description: Teleport a player to a random location within the world border.
   debug: false
   name: dwild
+  usage: /dwild
   aliases:
   - wild
   - rtp
@@ -68,7 +69,7 @@ dWildCommand:
 
   # If you have the permission.. version!
   - if <context.args.get[1]||null> == version && ( <player.has_permission[dwild.version]> || <context.server> ):
-    - narrate "<red>dWild <green>v<script[dWildVersion].yaml_key[version]>"
+    - narrate "<red>dWild <green>v<script[dWildVersion].data_key[version]>"
     - stop
   - if <context.args.get[1]> == reload && ( <player.has_permission[dwild.reload]> || <context.server> ):
     - inject dWildInit
@@ -107,7 +108,7 @@ dWildCommand:
       - define safeTeleportDistNegative:<[safeTeleportDistPositive].mul[-1]>
   - else:
     - define safeTeleportDistPositive:<[maxDistFromSpawn].sub[<[maxDistFromSpawn].as_element.mul[0.10]>]>
-    - define safeTeleportDistNegative:<[safeTeleportDistPositive].to_element.mul[-1]>
+    - define safeTeleportDistNegative:<element[safeTeleportDistPositive].mul[-1]>
 
   - define foundChunk:false
   - define loops:0
